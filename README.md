@@ -4,7 +4,7 @@ This project was generated with Django that default come with sqlite3
 
 ## Install dependencies
 
-In order to locally test this backend server, open the terminal under this project folder, run 
+In order to locally run this backend server, open the terminal under this project folder, run 
 ```
 pip3 install -r requirements.txt
 ```
