@@ -13,10 +13,9 @@ MODEL_SET = {"CAR":(Car, CarSerializer),
              "FRIDGE":(Fridge, FridgeSerializer)}
 
 
-# GET /devices/ ->  get all device common data which only include track_id, device_type, loc_lat, loc_lng
-# DELETE /devices/<track_id> ->  delete all the data of the provided track_id
-#PATCH /devices/cars/<track_id> -> update specific device's state of given track_id
 class DeviceListViewSet(APIView):
+    # GET /devices/
+    # GET /devices/<track_id>
     def get(self, request, track_id=None):
         if track_id:
             item = get_object_or_404(Basic_device, track_id = track_id)
@@ -28,7 +27,7 @@ class DeviceListViewSet(APIView):
         serializers =  Basic_device.objects.all()    
         device_serializer = DeviceDerializer(serializers, many=True)
         return Response(device_serializer.data, status=status.HTTP_200_OK)
-
+    # GET /devices/<track_id>
     def delete(self, request, track_id=None):
         if not track_id:
             return Response({"status": "error", "data": "No device detail is provided"}, status=status.HTTP_400_BAD_REQUEST)
@@ -36,7 +35,7 @@ class DeviceListViewSet(APIView):
         item.delete()
         send_update_signal()
         return Response({"status": "success", "data": "Item Deleted"})
-
+    # POST /devices/
     def post(self, request):
         type = request.data["device_type"]
         model, model_serializer = MODEL_SET[type]
@@ -47,7 +46,7 @@ class DeviceListViewSet(APIView):
             return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-    
+    # PATCH /devices/<track_id>
     def patch(self, request, track_id=None):
         if not track_id:
             return Response({"status": "error", "data": "No device detail is provided"}, status=status.HTTP_400_BAD_REQUEST)
@@ -62,19 +61,17 @@ class DeviceListViewSet(APIView):
         else:
             return Response({"status": "error", "data": serializer.errors})
         
-    
-#GET /devices/cars/ -> get all specific type devices' (cars) detailed info list
-#POST /devices/cars/ -> add new specific type (car) device 
+
 class CarListViewSet(APIView):
+    # GET /devices/cars/
     def get(self, request, track_id=None):
         queryset_cars = Car.objects.all()
         cars_serializer = CarSerializer(queryset_cars, many=True)
         return Response(cars_serializer.data, status=status.HTTP_200_OK)
 
 
-#GET /devices/fridges/ -> get all specific type devices' (fridges) detailed info list
-#POST /devices/fridges/ -> add new specific type (fridges) device 
 class FridgeListViewSet(APIView):
+    # GET /devices/fridges/
     def get(self, request):
         queryset_fridges = Fridge.objects.all()
         fridge_serializer = FridgeSerializer(queryset_fridges, many=True)
