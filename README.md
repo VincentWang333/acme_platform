@@ -33,5 +33,5 @@ python3 manage.py runserver
                           (except common data, there are more fridge related data such as ice level, water leak etc.)
 #POST /devices/fridges/ -> add new specific type (fridges) device 
 ```
-Since this api havs only two device type implemented, only car list, fridge list and all device list can be retrived. 
+Since this api has only two device types implemented, only car list, fridge list and all device list can be retrived. 
 
